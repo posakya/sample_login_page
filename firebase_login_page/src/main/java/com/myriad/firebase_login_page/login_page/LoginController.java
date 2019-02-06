@@ -47,7 +47,7 @@ public class LoginController {
         LoginViewClass loginViewClass = new LoginViewClass(context);
         loginViewClass.allowPermission();
 
-        dialog = new Dialog(context,android.R.style.Theme_Holo_Light);
+        dialog = new Dialog(context);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.getWindow().getDecorView().setBackgroundResource(R.color.colorPrimaryDark);
         dialog.setContentView(R.layout.login_view);
