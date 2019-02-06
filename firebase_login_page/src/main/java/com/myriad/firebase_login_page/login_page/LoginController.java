@@ -106,7 +106,7 @@ public class LoginController {
         }else if (!LoginClass.email.matches(Validation.emailPattern)){
             Toast.makeText(context, "Email is not valid", Toast.LENGTH_SHORT).show();
         }else{
-            dialog.dismiss();
+//            dialog.dismiss();
             loginClass = new LoginClass(context);
             LoginClass.tree = "User";
             id = String.valueOf(System.currentTimeMillis());
@@ -119,7 +119,7 @@ public class LoginController {
             user.setId(id);
             user.setLocation(location);
 
-            System.out.println("user : "+user);
+            Toast.makeText(context, "Response : "+user, Toast.LENGTH_SHORT).show();
 
 
 
@@ -138,8 +138,8 @@ public class LoginController {
 //                        Toast.makeText(context, "Failed to save data!!", Toast.LENGTH_SHORT).show();
 //                    }else{
 //                        Toast.makeText(context, "Successfully saved data!!", Toast.LENGTH_SHORT).show();
-//                        SharedPreferenceClasses sharedPreferenceClasses = new SharedPreferenceClasses(context);
-//                        sharedPreferenceClasses.saveData(user.getId(),user.getFirst_name(),user.getLast_name(),user.getEmail(),String.format("%.2f",user.getLocation().getLatitude()),String.format("%.2f",user.getLocation().getLongitude()),user.getLocation().getStreet_address(),String.format("%.2f",user.getDevice_id()));
+                        SharedPreferenceClasses sharedPreferenceClasses = new SharedPreferenceClasses(context);
+                        sharedPreferenceClasses.saveData(user.getId(),user.getFirst_name(),user.getLast_name(),user.getEmail(),String.format("%.2f",user.getLocation().getLatitude()),String.format("%.2f",user.getLocation().getLongitude()),user.getLocation().getStreet_address(),String.format("%.2f",user.getDevice_id()));
 //                    }
 //                }
 //            });
