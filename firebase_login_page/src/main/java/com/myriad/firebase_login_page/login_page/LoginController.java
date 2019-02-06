@@ -1,14 +1,12 @@
 package com.myriad.firebase_login_page.login_page;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v7.widget.Toolbar;
 import android.telephony.TelephonyManager;
 import android.view.View;
 import android.view.Window;
@@ -31,7 +29,7 @@ public class LoginController {
     public static String id = "";
 
     LoginClass loginClass;
-    Dialog dialog;
+    static Dialog dialog;
     TelephonyManager telephonyManager;
 
 
@@ -47,9 +45,9 @@ public class LoginController {
         LoginViewClass loginViewClass = new LoginViewClass(context);
         loginViewClass.allowPermission();
 
-        dialog = new Dialog(context);
+        dialog = new Dialog(context,android.R.style.Theme_Holo_Light);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.getWindow().getDecorView().setBackgroundResource(R.color.colorPrimaryDark);
+        dialog.getWindow().getDecorView().setBackgroundResource(R.drawable.gradient_bck);
         dialog.setContentView(R.layout.login_view);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -106,11 +104,11 @@ public class LoginController {
         }else if (!LoginClass.email.matches(Validation.emailPattern)){
             Toast.makeText(context, "Email is not valid", Toast.LENGTH_SHORT).show();
         }else{
-//            dialog.dismiss();
+
             loginClass = new LoginClass(context);
             LoginClass.tree = "User";
             id = String.valueOf(System.currentTimeMillis());
-            Location location = new Location(GpsCoordinate.lat,GpsCoordinate.lng,"imadol");
+            Location location = new Location(GpsCoordinate.lat,GpsCoordinate.lng,"Thapathali");
             final User user = new User();
             user.setDevice_id(Double.valueOf(LoginClass.deviceId));
             user.setEmail(LoginClass.email);
@@ -121,30 +119,20 @@ public class LoginController {
 
             Toast.makeText(context, "Response : "+user, Toast.LENGTH_SHORT).show();
 
+            SharedPreferenceClasses sharedPreferenceClasses = new SharedPreferenceClasses(context);
+            sharedPreferenceClasses.saveData(user.getId(),user.getFirst_name(),user.getLast_name(),user.getEmail(),String.format("%.2f",user.getLocation().getLatitude()),String.format("%.2f",user.getLocation().getLongitude()),user.getLocation().getStreet_address(),String.format("%.2f",user.getDevice_id()));
 
-
-
-         /*
-
-             checking whether the data is written or not in fire base database
-
-         */
-
-//            FirebaseDatabase.getInstance().getReference().child(LoginClass.tree).setValue(user, new DatabaseReference.CompletionListener() {
-//                @SuppressLint("DefaultLocale")
-//                public void onComplete(DatabaseError error, @NonNull DatabaseReference ref) {
-//
-//                    if (error != null){
-//                        Toast.makeText(context, "Failed to save data!!", Toast.LENGTH_SHORT).show();
-//                    }else{
-//                        Toast.makeText(context, "Successfully saved data!!", Toast.LENGTH_SHORT).show();
-                        SharedPreferenceClasses sharedPreferenceClasses = new SharedPreferenceClasses(context);
-                        sharedPreferenceClasses.saveData(user.getId(),user.getFirst_name(),user.getLast_name(),user.getEmail(),String.format("%.2f",user.getLocation().getLatitude()),String.format("%.2f",user.getLocation().getLongitude()),user.getLocation().getStreet_address(),String.format("%.2f",user.getDevice_id()));
-//                    }
-//                }
-//            });
+            isDialogDismiss();
 
         }
+    }
+
+    public void isDialogDismiss(){
+
+        if (dialog.isShowing()){
+            dialog.dismiss();
+        }
+
     }
 
 
