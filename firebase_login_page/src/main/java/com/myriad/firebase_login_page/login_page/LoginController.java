@@ -17,9 +17,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
 import com.myriad.firebase_login_page.R;
 import com.myriad.firebase_login_page.adapter_class.GpsCoordinate;
 import com.myriad.firebase_login_page.adapter_class.LoginClass;
@@ -34,7 +31,7 @@ public class LoginController {
     public static String id = "";
 
     LoginClass loginClass;
-
+    Dialog dialog;
     TelephonyManager telephonyManager;
 
 
@@ -50,7 +47,7 @@ public class LoginController {
         LoginViewClass loginViewClass = new LoginViewClass(context);
         loginViewClass.allowPermission();
 
-        Dialog dialog = new Dialog(context,android.R.style.Theme_Holo_Light);
+        dialog = new Dialog(context,android.R.style.Theme_Holo_Light);
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.getWindow().getDecorView().setBackgroundResource(R.color.colorPrimaryDark);
         dialog.setContentView(R.layout.login_view);
@@ -71,6 +68,7 @@ public class LoginController {
             @Override
             public void onClick(View view) {
                 inputData();
+
             }
         });
 
@@ -108,9 +106,10 @@ public class LoginController {
         }else if (!LoginClass.email.matches(Validation.emailPattern)){
             Toast.makeText(context, "Email is not valid", Toast.LENGTH_SHORT).show();
         }else{
+            dialog.dismiss();
             loginClass = new LoginClass(context);
             LoginClass.tree = "User";
-            id = FirebaseDatabase.getInstance().getReference().push().getKey();
+            id = String.valueOf(System.currentTimeMillis());
             Location location = new Location(GpsCoordinate.lat,GpsCoordinate.lng,"imadol");
             final User user = new User();
             user.setDevice_id(Double.valueOf(LoginClass.deviceId));
@@ -120,25 +119,30 @@ public class LoginController {
             user.setId(id);
             user.setLocation(location);
 
+            System.out.println("user : "+user);
+
+
+
+
          /*
 
              checking whether the data is written or not in fire base database
 
          */
 
-            FirebaseDatabase.getInstance().getReference().child(LoginClass.tree).setValue(user, new DatabaseReference.CompletionListener() {
-                @SuppressLint("DefaultLocale")
-                public void onComplete(DatabaseError error, @NonNull DatabaseReference ref) {
-
-                    if (error != null){
-                        Toast.makeText(context, "Failed to save data!!", Toast.LENGTH_SHORT).show();
-                    }else{
-                        Toast.makeText(context, "Successfully saved data!!", Toast.LENGTH_SHORT).show();
-                        SharedPreferenceClasses sharedPreferenceClasses = new SharedPreferenceClasses(context);
-                        sharedPreferenceClasses.saveData(user.getId(),user.getFirst_name(),user.getLast_name(),user.getEmail(),String.format("%.2f",user.getLocation().getLatitude()),String.format("%.2f",user.getLocation().getLongitude()),user.getLocation().getStreet_address(),String.format("%.2f",user.getDevice_id()));
-                    }
-                }
-            });
+//            FirebaseDatabase.getInstance().getReference().child(LoginClass.tree).setValue(user, new DatabaseReference.CompletionListener() {
+//                @SuppressLint("DefaultLocale")
+//                public void onComplete(DatabaseError error, @NonNull DatabaseReference ref) {
+//
+//                    if (error != null){
+//                        Toast.makeText(context, "Failed to save data!!", Toast.LENGTH_SHORT).show();
+//                    }else{
+//                        Toast.makeText(context, "Successfully saved data!!", Toast.LENGTH_SHORT).show();
+//                        SharedPreferenceClasses sharedPreferenceClasses = new SharedPreferenceClasses(context);
+//                        sharedPreferenceClasses.saveData(user.getId(),user.getFirst_name(),user.getLast_name(),user.getEmail(),String.format("%.2f",user.getLocation().getLatitude()),String.format("%.2f",user.getLocation().getLongitude()),user.getLocation().getStreet_address(),String.format("%.2f",user.getDevice_id()));
+//                    }
+//                }
+//            });
 
         }
     }

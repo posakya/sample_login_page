@@ -22,43 +22,43 @@ public class LoginClass {
         this.context = context;
     }
 
-    public void postData(String tree, final String id, final String first_name, final String last_name, final String email, final Double device_id, final Double latitude, final Double longitude, final String street_address){
-
-        Location location = new Location(latitude,longitude,street_address);
-        User user = new User();
-        user.setDevice_id(device_id);
-        user.setEmail(email);
-        user.setFirst_name(first_name);
-        user.setLast_name(last_name);
-        user.setId(id);
-        user.setLocation(location);
-
-//        SharedPreferenceClasses sharedPreferenceClasses = new SharedPreferenceClasses(context);
-//        sharedPreferenceClasses.saveData(id,first_name,last_name,email,String.format("%.2f",latitude),String.format("%.2f",longitude),street_address,String.format("%.2f",device_id));
-
-
-        /*
-
-             checking whether the data is written or not in fire base database
-
-         */
+//    public void postData(String tree, final String id, final String first_name, final String last_name, final String email, final Double device_id, final Double latitude, final Double longitude, final String street_address){
 //
-//        FirebaseDatabase.getInstance().getReference().child(tree).setValue(user, new DatabaseReference.CompletionListener() {
-//            @SuppressLint("DefaultLocale")
-//            public void onComplete(DatabaseError error, @NonNull DatabaseReference ref) {
+////        Location location = new Location(latitude,longitude,street_address);
+////        User user = new User();
+////        user.setDevice_id(device_id);
+////        user.setEmail(email);
+////        user.setFirst_name(first_name);
+////        user.setLast_name(last_name);
+////        user.setId(id);
+////        user.setLocation(location);
 //
-//                if (error != null){
-//                    Toast.makeText(context, "Failed to save data!!", Toast.LENGTH_SHORT).show();
-//                }else{
+////        SharedPreferenceClasses sharedPreferenceClasses = new SharedPreferenceClasses(context);
+////        sharedPreferenceClasses.saveData(id,first_name,last_name,email,String.format("%.2f",latitude),String.format("%.2f",longitude),street_address,String.format("%.2f",device_id));
 //
-//                    Toast.makeText(context, "Successfully saved data!!", Toast.LENGTH_SHORT).show();
-//                    SharedPreferenceClasses sharedPreferenceClasses = new SharedPreferenceClasses(context);
-//                    sharedPreferenceClasses.saveData(id,first_name,last_name,email,String.format("%.2f",latitude),String.format("%.2f",longitude),street_address,String.format("%.2f",device_id));
 //
-//                }
-//            }
-//        });
+//        /*
+//
+//             checking whether the data is written or not in fire base database
+//
+//         */
+////
+////        FirebaseDatabase.getInstance().getReference().child(tree).setValue(user, new DatabaseReference.CompletionListener() {
+////            @SuppressLint("DefaultLocale")
+////            public void onComplete(DatabaseError error, @NonNull DatabaseReference ref) {
+////
+////                if (error != null){
+////                    Toast.makeText(context, "Failed to save data!!", Toast.LENGTH_SHORT).show();
+////                }else{
+////
+////                    Toast.makeText(context, "Successfully saved data!!", Toast.LENGTH_SHORT).show();
+////                    SharedPreferenceClasses sharedPreferenceClasses = new SharedPreferenceClasses(context);
+////                    sharedPreferenceClasses.saveData(id,first_name,last_name,email,String.format("%.2f",latitude),String.format("%.2f",longitude),street_address,String.format("%.2f",device_id));
+////
+////                }
+////            }
+////        });
 
-    }
+//    }
 
 }
