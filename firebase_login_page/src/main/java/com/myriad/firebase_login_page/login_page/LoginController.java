@@ -1,10 +1,12 @@
 package com.myriad.firebase_login_page.login_page;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.widget.Toolbar;
 import android.telephony.TelephonyManager;
@@ -15,9 +17,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.myriad.firebase_login_page.R;
 import com.myriad.firebase_login_page.adapter_class.GpsCoordinate;
 import com.myriad.firebase_login_page.adapter_class.LoginClass;
+import com.myriad.firebase_login_page.adapter_class.SharedPreferenceClasses;
+import com.myriad.firebase_login_page.model_class.Location;
+import com.myriad.firebase_login_page.model_class.User;
+import com.myriad.sample_library.validation.Validation;
 
 public class LoginController {
 
@@ -27,10 +36,7 @@ public class LoginController {
     LoginClass loginClass;
 
     TelephonyManager telephonyManager;
-    public static String deviceId;
-    public static String firstName;
-    public static String lastName;
-    public static String email;
+
 
     EditText editFirstName, editLastName, editEmail;
     Button btnSave;
@@ -54,8 +60,6 @@ public class LoginController {
             dialog.getWindow().setStatusBarColor(context.getResources().getColor(R.color.colorPrimaryDark));
         }
 
-//        dialog.getWindow().getAttributes().windowAnimations = R.style.DialogAnimation;
-
         dialog.setCanceledOnTouchOutside(true);
 
         editEmail = dialog.findViewById(R.id.editEmail);
@@ -70,6 +74,8 @@ public class LoginController {
             }
         });
 
+        dialog.show();
+
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
@@ -82,26 +88,58 @@ public class LoginController {
         }
 
         telephonyManager = (TelephonyManager) context.getSystemService(context.TELEPHONY_SERVICE);
-        deviceId = telephonyManager.getDeviceId();
+        LoginClass.deviceId = telephonyManager.getDeviceId();
 
 
     }
 
-    public void inputData(){
-        email = editEmail.getText().toString().trim();
-        firstName = editFirstName.getText().toString().trim();
-        lastName = editLastName.getText().toString().trim();
+    private void inputData(){
 
-        if (firstName.isEmpty()){
+        LoginClass.email = editEmail.getText().toString().trim();
+        LoginClass.firstName = editFirstName.getText().toString().trim();
+        LoginClass.lastName = editLastName.getText().toString().trim();
+
+        if (LoginClass.firstName.isEmpty()){
             Toast.makeText(context, "First name required", Toast.LENGTH_SHORT).show();
-        }else if (lastName.isEmpty()){
+        }else if (LoginClass.lastName.isEmpty()){
             Toast.makeText(context, "Last name required", Toast.LENGTH_SHORT).show();
-        }else if (email.isEmpty()){
+        }else if (LoginClass.email.isEmpty()){
             Toast.makeText(context, "Email required", Toast.LENGTH_SHORT).show();
+        }else if (!LoginClass.email.matches(Validation.emailPattern)){
+            Toast.makeText(context, "Email is not valid", Toast.LENGTH_SHORT).show();
         }else{
             loginClass = new LoginClass(context);
             LoginClass.tree = "User";
-            loginClass.postData(LoginClass.tree,id,firstName,lastName,email, Double.valueOf(deviceId), GpsCoordinate.lat, GpsCoordinate.lng,"imadol");
+            id = FirebaseDatabase.getInstance().getReference().push().getKey();
+            Location location = new Location(GpsCoordinate.lat,GpsCoordinate.lng,"imadol");
+            final User user = new User();
+            user.setDevice_id(Double.valueOf(LoginClass.deviceId));
+            user.setEmail(LoginClass.email);
+            user.setFirst_name(LoginClass.firstName);
+            user.setLast_name(LoginClass.lastName);
+            user.setId(id);
+            user.setLocation(location);
+
+         /*
+
+             checking whether the data is written or not in fire base database
+
+         */
+
+            FirebaseDatabase.getInstance().getReference().child(LoginClass.tree).setValue(user, new DatabaseReference.CompletionListener() {
+                @SuppressLint("DefaultLocale")
+                public void onComplete(DatabaseError error, @NonNull DatabaseReference ref) {
+
+                    if (error != null){
+                        Toast.makeText(context, "Failed to save data!!", Toast.LENGTH_SHORT).show();
+                    }else{
+                        Toast.makeText(context, "Successfully saved data!!", Toast.LENGTH_SHORT).show();
+                        SharedPreferenceClasses sharedPreferenceClasses = new SharedPreferenceClasses(context);
+                        sharedPreferenceClasses.saveData(user.getId(),user.getFirst_name(),user.getLast_name(),user.getEmail(),String.format("%.2f",user.getLocation().getLatitude()),String.format("%.2f",user.getLocation().getLongitude()),user.getLocation().getStreet_address(),String.format("%.2f",user.getDevice_id()));
+                    }
+                }
+            });
+
         }
     }
 

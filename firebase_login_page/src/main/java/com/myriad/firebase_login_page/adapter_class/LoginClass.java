@@ -13,6 +13,10 @@ public class LoginClass {
 
     Context context;
     public static String tree;
+    public static String deviceId = "";
+    public static String firstName = "";
+    public static String lastName = "";
+    public static String email="";
 
     public LoginClass(Context context) {
         this.context = context;

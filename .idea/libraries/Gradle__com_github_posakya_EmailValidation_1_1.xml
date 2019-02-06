@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Gradle: com.github.posakya:EmailValidation-1.1">
+    <CLASSES>
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/EmailValidation-1.1.aar/579be8c4d9c65c261da4eb9f8bc41f29/res" />
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-1/files-1.1/EmailValidation-1.1.aar/579be8c4d9c65c261da4eb9f8bc41f29/jars/classes.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.github.posakya/EmailValidation/1.1/c802c59026aac67a2d594010eb86a23ed1043f82/EmailValidation-1.1-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
